@@ -1,0 +1,8 @@
+/home/yongheng/Clock/cmake-build-debug/CMakeFiles/Module.dir
+/home/yongheng/Clock/cmake-build-debug/CMakeFiles/Clock.dir
+/home/yongheng/Clock/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/yongheng/Clock/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/yongheng/Clock/cmake-build-debug/CMakeFiles/Module_autogen_timestamp_deps.dir
+/home/yongheng/Clock/cmake-build-debug/CMakeFiles/Module_autogen.dir
+/home/yongheng/Clock/cmake-build-debug/CMakeFiles/Clock_autogen_timestamp_deps.dir
+/home/yongheng/Clock/cmake-build-debug/CMakeFiles/Clock_autogen.dir
