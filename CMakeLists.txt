@@ -19,7 +19,12 @@ target_sources(Module
         Time.cppm
 )
 
-add_executable(Clock main.cpp)
+add_executable(Clock main.cpp
+        MainWindow.ui
+        MainWindow.h
+        MainWindow.cpp
+
+)
 
 
 

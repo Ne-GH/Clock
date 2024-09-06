@@ -348,7 +348,15 @@
 	"CROSS_CONFIG" : false,
 	"DEP_FILE" : "/home/yongheng/Clock/cmake-build-debug/Clock_autogen/deps",
 	"DEP_FILE_RULE_NAME" : "Clock_autogen/timestamp",
-	"HEADERS" : [],
+	"HEADERS" : 
+	[
+		[
+			"/home/yongheng/Clock/MainWindow.h",
+			"MU",
+			"EWIEGA46WW/moc_MainWindow.cpp",
+			null
+		]
+	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
 	"INCLUDE_DIR" : "/home/yongheng/Clock/cmake-build-debug/Clock_autogen/include",
 	"MOC_COMPILATION_FILE" : "/home/yongheng/Clock/cmake-build-debug/Clock_autogen/mocs_compilation.cpp",
@@ -399,6 +407,7 @@
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : 
 	[
+		"/home/yongheng/Clock/cmake-build-debug/Module_autogen/include/ui_MainWindow.h",
 		"/home/yongheng/Clock/cmake-build-debug/Module_autogen/mocs_compilation.cpp"
 	],
 	"MULTI_CONFIG" : false,
@@ -411,12 +420,14 @@
 	"SETTINGS_FILE" : "/home/yongheng/Clock/cmake-build-debug/CMakeFiles/Clock_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[ "/home/yongheng/Clock/MainWindow.cpp", "MU", null ],
 		[ "/home/yongheng/Clock/main.cpp", "MU", null ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],
 	"UIC_SKIP" : 
 	[
+		"/home/yongheng/Clock/cmake-build-debug/Module_autogen/include/ui_MainWindow.h",
 		"/home/yongheng/Clock/cmake-build-debug/Module_autogen/mocs_compilation.cpp"
 	],
 	"UIC_UI_FILES" : [],

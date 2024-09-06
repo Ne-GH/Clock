@@ -1,0 +1,12 @@
+{
+	"modules" : {},
+	"references" : 
+	{
+		"Date" : 
+		{
+			"lookup-method" : "by-name",
+			"path" : "CMakeFiles/Module.dir/Date.gcm"
+		}
+	},
+	"usages" : {}
+}

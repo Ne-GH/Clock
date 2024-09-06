@@ -1,0 +1,11 @@
+{
+"rules": [
+{
+"primary-output": "CMakeFiles/Clock.dir/MainWindow.cpp.o",
+"requires": [
+]
+}
+],
+"version": 0,
+"revision": 0
+}
