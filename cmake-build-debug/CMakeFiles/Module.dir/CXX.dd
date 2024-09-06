@@ -1,4 +1,0 @@
-ninja_dyndep_version = 1.0
-build CMakeFiles/Module.dir/Time.cppm.o | CMakeFiles/Module.dir/Date.gcm: dyndep
-  restat = 1
-
