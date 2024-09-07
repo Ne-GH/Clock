@@ -12,17 +12,22 @@ find_package(Qt6 COMPONENTS
         Widgets
         REQUIRED)
 
+#[[
 add_library(Module)
 target_sources(Module
         PUBLIC
         FILE_SET cxx_modules TYPE CXX_MODULES FILES
         Time.cppm
 )
+]]
 
 add_executable(Clock main.cpp
         MainWindow.ui
         MainWindow.h
         MainWindow.cpp
+
+        Time.h
+        Time.cpp
 
 )
 
@@ -32,7 +37,7 @@ target_link_libraries(Clock
         Qt::Core
         Qt::Gui
         Qt::Widgets
-        Module
+        # Module
 )
 
 

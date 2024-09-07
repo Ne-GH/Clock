@@ -3,6 +3,8 @@
 
 #include <QLabel>
 #include <QMessageBox>
+#include <QPainter>
+#include <iostream>
 
 
 
@@ -25,19 +27,39 @@ MainWindow::MainWindow(QWidget *parent)
     setMinimumHeight(400);
     setMinimumWidth(400);
 
-    this->setWindowFlags(Qt::FramelessWindowHint);
+    setAttribute(Qt::WA_TranslucentBackground, true);
+    setWindowFlags(Qt::FramelessWindowHint);
+    setWindowFlags(windowFlags() | Qt::WindowStaysOnBottomHint);
 
-    QPixmap pix(400,400);
-    clock_lab_->setPixmap(pix);
-
-
-
-}
-
-void MainWindow::set_clock_pixmap(const QPixmap &pixmap) const {
-    clock_lab_->setPixmap(pixmap);
 }
 
 MainWindow::~MainWindow() {
     delete ui;
+}
+
+QPixmap MainWindow::draw_pixmap(const Time &time) {
+    auto hour_angle = time.hour() * 15;  // hour / 24 * 360
+    auto minute_angle = time.minute() * 6; // minute / 60 * 360
+    int second_angle = time.second() * 6; // second / 60 * 360
+    auto millisecond_angle = time.millisecond() * 0.360; // millisecond / 1000 * 360
+
+    QPixmap pixmap(width(),height());
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
+    QPen pen(Qt::black);
+    pen.setWidth(4);
+    painter.setPen(pen);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform); //抗锯齿和使用平滑转换算法
+
+    size_t pen_width = pen.width();
+    painter.drawArc(pen_width, pen_width,
+                    width() - pen_width * 2, height() - pen_width * 2,
+                    90 * 16, -second_angle * 16);
+
+    painter.end();
+
+    return pixmap;
+}
+void MainWindow::update_clock() {
+    clock_lab_->setPixmap(draw_pixmap(Time()));
 }
