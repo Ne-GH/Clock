@@ -41,20 +41,20 @@ QPixmap MainWindow::draw_pixmap(const Time &time) {
     auto hour_angle = time.hour() * 15;  // hour / 24 * 360
     auto minute_angle = time.minute() * 6; // minute / 60 * 360
     int second_angle = time.second() * 6; // second / 60 * 360
-    auto millisecond_angle = time.millisecond() * 0.360; // millisecond / 1000 * 360
+    auto millisecond_angle = time.millisecond() * 0.006; // millisecond / 1000 * 6 (1毫秒占6度)
 
     QPixmap pixmap(width(),height());
     pixmap.fill(Qt::transparent);
     QPainter painter(&pixmap);
     QPen pen(Qt::black);
-    pen.setWidth(4);
+    pen.setWidth(10);
     painter.setPen(pen);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform); //抗锯齿和使用平滑转换算法
 
     size_t pen_width = pen.width();
     painter.drawArc(pen_width, pen_width,
                     width() - pen_width * 2, height() - pen_width * 2,
-                    90 * 16, -second_angle * 16);
+                    90 * 16 , -(second_angle + millisecond_angle) * 16);
 
     painter.end();
 

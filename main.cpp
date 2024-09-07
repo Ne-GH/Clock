@@ -12,7 +12,7 @@ int main(int argc,char *argv[]) {
     QObject::connect(&timer,&QTimer::timeout,[&] {
         w.update_clock();
     });
-    timer.start(100);
+    timer.start(10);
 
     return a.exec();
 }
