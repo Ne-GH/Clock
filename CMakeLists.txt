@@ -29,7 +29,7 @@ add_executable(Clock main.cpp
         Time.h
         Time.cpp
 
-)
+ )
 
 
 

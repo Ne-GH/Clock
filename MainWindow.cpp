@@ -7,7 +7,6 @@
 #include <iostream>
 
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -27,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     setMinimumHeight(400);
     setMinimumWidth(400);
 
-    setAttribute(Qt::WA_TranslucentBackground, true);
+    // setAttribute(Qt::WA_TranslucentBackground, true);
     setWindowFlags(Qt::FramelessWindowHint);
     setWindowFlags(windowFlags() | Qt::WindowStaysOnBottomHint);
 
@@ -35,6 +34,27 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() {
     delete ui;
+}
+
+void DrawRoundByRadius(QPainter &painter, const QRect &rect, const int radius, const int angle,const bool adjust = true) {
+    auto pen_width = painter.pen().width();
+    int begin_x = rect.x() + rect.width() * 0.5 - radius + 0.5 * pen_width;
+    int begin_y = rect.y() + rect.width() * 0.5 - radius + 0.5 * pen_width;
+    int width = radius * 2 - pen_width;
+    int height = radius * 2 - pen_width;
+
+    if (adjust) {
+        painter.drawArc(begin_x,begin_y,
+                        width, height,
+                        90 * 16 , -(angle) * 16);
+    }
+    else {
+        /*
+        painter.drawArc(pen_width, pen_width,
+                        width() - pen_width * 2, height() - pen_width * 2,
+                        90 * 16 , -(angle) * 16);
+    */
+    }
 }
 
 QPixmap MainWindow::draw_pixmap(const Time &time) {
@@ -47,16 +67,23 @@ QPixmap MainWindow::draw_pixmap(const Time &time) {
     pixmap.fill(Qt::transparent);
     QPainter painter(&pixmap);
     QPen pen(Qt::black);
-    pen.setWidth(10);
+    pen.setWidth(40);
+    pen.setCapStyle(Qt::FlatCap);
     painter.setPen(pen);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform); //抗锯齿和使用平滑转换算法
 
     size_t pen_width = pen.width();
-    painter.drawArc(pen_width, pen_width,
-                    width() - pen_width * 2, height() - pen_width * 2,
-                    90 * 16 , -(second_angle + millisecond_angle) * 16);
+    DrawRoundByRadius(painter,
+        {0,0,width(),height()}, width() / 2, second_angle + millisecond_angle);
+    DrawRoundByRadius(painter,
+        {0,0,width(),height()}, width() / 2 - pen_width, second_angle + millisecond_angle);
+
+    //painter.drawArc(pen_width, pen_width,
+    //                width() - pen_width * 2, height() - pen_width * 2,
+    //                90 * 16 , -(second_angle + millisecond_angle) * 16);
 
     painter.end();
+    
 
     return pixmap;
 }
