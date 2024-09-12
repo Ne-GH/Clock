@@ -22,7 +22,6 @@ target_sources(Module
 ]]
 
 add_executable(Clock main.cpp
-        MainWindow.ui
         MainWindow.h
         MainWindow.cpp
 
