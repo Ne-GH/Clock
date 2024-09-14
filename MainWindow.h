@@ -3,6 +3,7 @@
 #include <QMainWindow>
 #include <QLabel>
 #include "Time.h"
+#include "ClockImage.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,7 +18,7 @@ class MainWindow : public QMainWindow
 
     Ui::MainWindow *ui;
     QLabel *clock_lab_;
-    QPixmap draw_pixmap(const Time &);
+    ClockImage clock_img_;
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;

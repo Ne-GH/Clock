@@ -30,34 +30,18 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowFlags(Qt::FramelessWindowHint);
     setWindowFlags(windowFlags() | Qt::WindowStaysOnBottomHint);
 
+    clock_img_.set_width_height(width(), height());
+
 }
 
 MainWindow::~MainWindow() {
     delete ui;
 }
 
-void DrawRoundByRadius(QPainter &painter, const QRect &rect, const int radius, const int angle,const bool adjust = true) {
-    auto pen_width = painter.pen().width();
-    int begin_x = rect.x() + rect.width() * 0.5 - radius + 0.5 * pen_width;
-    int begin_y = rect.y() + rect.width() * 0.5 - radius + 0.5 * pen_width;
-    int width = radius * 2 - pen_width;
-    int height = radius * 2 - pen_width;
 
-    if (adjust) {
-        painter.drawArc(begin_x,begin_y,
-                        width, height,
-                        90 * 16 , -(angle) * 16);
-    }
-    else {
-        /*
-        painter.drawArc(pen_width, pen_width,
-                        width() - pen_width * 2, height() - pen_width * 2,
-                        90 * 16 , -(angle) * 16);
-    */
-    }
-}
-
+/*
 QPixmap MainWindow::draw_pixmap(const Time &time) {
+    /*
     auto hour_angle = time.hour() * 15;  // hour / 24 * 360
     auto minute_angle = time.minute() * 6; // minute / 60 * 360
     int second_angle = time.second() * 6; // second / 60 * 360
@@ -72,21 +56,15 @@ QPixmap MainWindow::draw_pixmap(const Time &time) {
     painter.setPen(pen);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform); //抗锯齿和使用平滑转换算法
 
-    size_t pen_width = pen.width();
-    DrawRoundByRadius(painter,
-        {0,0,width(),height()}, width() / 2, second_angle + millisecond_angle);
-    DrawRoundByRadius(painter,
-        {0,0,width(),height()}, width() / 2 - pen_width, second_angle + millisecond_angle);
-
-    //painter.drawArc(pen_width, pen_width,
-    //                width() - pen_width * 2, height() - pen_width * 2,
-    //                90 * 16 , -(second_angle + millisecond_angle) * 16);
-
     painter.end();
-    
+    #1#
+
+
 
     return pixmap;
-}
+}*/
 void MainWindow::update_clock() {
-    clock_lab_->setPixmap(draw_pixmap(Time()));
+    clock_img_.draw_pixmap();
+    clock_lab_->setPixmap(clock_img_.pixmap());
+    // clock_lab_->setPixmap(draw_pixmap(Time()));
 }
