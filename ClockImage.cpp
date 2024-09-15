@@ -14,6 +14,12 @@ ClockImage::ClockImage(int width,int height) {
     painter_->setPen(pen_);
     painter_->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform); //抗锯齿和使用平滑转换算法
 }
+void ClockImage::set_pen_width(const int pen_width) {
+    auto pen = pen_;
+    pen.setWidth(pen_width);
+    pen_ = pen;
+    painter_->setPen(pen_);
+}
 
 
 void ClockImage::draw_round(int radius, int angle) {

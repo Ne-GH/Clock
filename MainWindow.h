@@ -44,6 +44,8 @@ public:
     ~MainWindow() override;
     void update_clock();
 
+    void save_config();
+    void load_config();
 };
 
 

@@ -8,6 +8,45 @@
 
 #include "ColorChooseWidget.h"
 
+#include <QColor>
+#include <QDataStream>
+#include <QFile>
+
+// 重载 QDataStream 操作符
+QDataStream& operator<<(QDataStream& out, const ClockColor& color) {
+    out << color.second_color << color.minute_color << color.hour_color;
+    return out;
+}
+
+QDataStream& operator>>(QDataStream& in, ClockColor& color) {
+    in >> color.second_color >> color.minute_color >> color.hour_color;
+    return in;
+}
+
+// 序列化
+void SaveColor(const ClockColor& color, const QString& filename) {
+    QFile file(filename);
+    if (file.open(QIODevice::WriteOnly)) {
+        QDataStream out(&file);
+        out << color;
+        file.close();
+    }
+}
+
+// 反序列化
+ClockColor LoadColor(const QString& filename) {
+    QFile file(filename);
+    ClockColor color;
+    if (file.open(QIODevice::ReadOnly)) {
+        QDataStream in(&file);
+        in >> color;
+        file.close();
+    }
+    return color;
+}
+
+
+
 Menu::Menu(QMainWindow *parent = nullptr) {
     menu_ = std::make_unique<QMenu>();
     quit_action_ = std::make_unique<QAction>("退出");
@@ -27,8 +66,11 @@ Menu::Menu(QMainWindow *parent = nullptr) {
             return;
 
         QObject::connect(color_choose_widget_.get(),&ColorChooseWidget::change_color,[=](ClockColor clock_color) {
-            dynamic_cast<MainWindow *>(parent)->clock_color_ = clock_color;
+            const auto window = dynamic_cast<MainWindow *>(parent);
+            window->clock_color_ = clock_color;
             color_choose_widget_->draw_lab_color(clock_color);
+            window->save_config();
+
         });
         QObject::connect(color_choose_widget_.get(),&ColorChooseWidget::change_pen_width,[=](int pen_width) {
             auto main_window = dynamic_cast<MainWindow *>(parent);
@@ -54,6 +96,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->statusbar->hide();
+
+    load_config();
 
     clock_lab_ = new QLabel(this);
     setCentralWidget(clock_lab_);
@@ -93,6 +137,14 @@ void MainWindow::update_clock() {
     clock_image_->draw_pixmap();
     clock_lab_->setPixmap(clock_image_->pixmap());
     tray_icon_.setIcon(clock_image_->pixmap());
+}
+
+void MainWindow::save_config() {
+    SaveColor(clock_color_,"./config.cfg");
+
+}
+void MainWindow::load_config() {
+    clock_color_ = LoadColor("./config.cfg");
 }
 
 QMenu *Menu::menu(){

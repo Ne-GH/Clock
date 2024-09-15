@@ -27,6 +27,8 @@ public:
 
     void draw_pixmap();
 
+    void set_pen_width(int);
+
     const QPixmap& pixmap();
 
     void set_color(ClockColor);
