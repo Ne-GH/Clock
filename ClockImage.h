@@ -4,19 +4,23 @@
 *******************************************************************************/
 
 #pragma once
-#include "Time.h"
 #include <QPainter>
+#include <new>
+#include "Time.h"
+
+#include "ColorChooseWidget.h"
 
 class ClockImage {
-    QPainter painter_;
-    QPixmap pixmap_;
+    std::unique_ptr<QPainter> painter_;
+    std::unique_ptr<QPixmap> pixmap_;
 
-    QColor hour_color_;
-    QColor minute_color_;
-    QColor second_color_;
+    QPen pen_;
+
+
+    ClockColor color_;
 
 public:
-    ClockImage();
+    ClockImage(int ,int);
 
     void draw_round(int radius, int angle);
 
@@ -26,7 +30,7 @@ public:
 
     const QPixmap& pixmap();
 
-    void set_color(QColor, QColor, QColor);
+    void set_color(ClockColor);
 
     ~ClockImage();
 

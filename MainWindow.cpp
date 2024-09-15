@@ -6,6 +6,38 @@
 #include <QPainter>
 #include <iostream>
 
+#include "ColorChooseWidget.h"
+
+Menu::Menu(QMainWindow *parent = nullptr) {
+    menu_ = std::make_unique<QMenu>();
+    quit_action_ = std::make_unique<QAction>("退出");
+    color_choose_action_ = std::make_unique<QAction>("调色板");
+    color_choose_widget_ = std::make_unique<ColorChooseWidget>();
+
+    menu_->addAction(color_choose_action_.get());
+    menu_->addAction(quit_action_.get());
+
+    QObject::connect(quit_action_.get(), &QAction::triggered, [] {
+        exit(0);
+    });
+
+
+    QObject::connect(color_choose_action_.get(), &QAction::triggered, [=] {
+        if (parent == nullptr)
+            return;
+
+        QObject::connect(color_choose_widget_.get(),&ColorChooseWidget::change_color,[=](ClockColor clock_color) {
+            dynamic_cast<MainWindow *>(parent)->clock_color_ = clock_color;
+            color_choose_widget_->draw_lab_color(clock_color);
+        });
+
+        const auto clocks = dynamic_cast<MainWindow *>(parent)->clock_color_;
+        color_choose_widget_->draw_lab_color({clocks.second_color,clocks.minute_color,clocks.hour_color});
+        color_choose_widget_->exec();
+
+    });
+
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -26,11 +58,19 @@ MainWindow::MainWindow(QWidget *parent)
     setMinimumHeight(400);
     setMinimumWidth(400);
 
-    // setAttribute(Qt::WA_TranslucentBackground, true);
-    setWindowFlags(Qt::FramelessWindowHint);
-    setWindowFlags(windowFlags() | Qt::WindowStaysOnBottomHint);
+    setAttribute(Qt::WA_TranslucentBackground, true);
+    setWindowFlags(Qt::WindowStaysOnBottomHint | Qt::FramelessWindowHint);
 
-    clock_img_.set_width_height(width(), height());
+
+    clock_image_ = std::make_unique<ClockImage>(width(),height());
+    clock_image_->draw_pixmap();
+
+    tray_icon_.setIcon(clock_image_->pixmap());
+    tray_icon_.setToolTip("Clock");
+    tray_icon_.show();
+    menu_ = std::make_unique<Menu>(this);
+
+    tray_icon_.setContextMenu(menu_->menu());
 
 }
 
@@ -39,32 +79,13 @@ MainWindow::~MainWindow() {
 }
 
 
-/*
-QPixmap MainWindow::draw_pixmap(const Time &time) {
-    /*
-    auto hour_angle = time.hour() * 15;  // hour / 24 * 360
-    auto minute_angle = time.minute() * 6; // minute / 60 * 360
-    int second_angle = time.second() * 6; // second / 60 * 360
-    auto millisecond_angle = time.millisecond() * 0.006; // millisecond / 1000 * 6 (1毫秒占6度)
-
-    QPixmap pixmap(width(),height());
-    pixmap.fill(Qt::transparent);
-    QPainter painter(&pixmap);
-    QPen pen(Qt::black);
-    pen.setWidth(40);
-    pen.setCapStyle(Qt::FlatCap);
-    painter.setPen(pen);
-    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform); //抗锯齿和使用平滑转换算法
-
-    painter.end();
-    #1#
-
-
-
-    return pixmap;
-}*/
 void MainWindow::update_clock() {
-    clock_img_.draw_pixmap();
-    clock_lab_->setPixmap(clock_img_.pixmap());
-    // clock_lab_->setPixmap(draw_pixmap(Time()));
+    clock_image_->set_color(clock_color_);
+    clock_image_->draw_pixmap();
+    clock_lab_->setPixmap(clock_image_->pixmap());
+    tray_icon_.setIcon(clock_image_->pixmap());
+}
+
+QMenu *Menu::menu(){
+    return menu_.get();
 }

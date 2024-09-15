@@ -31,6 +31,9 @@ add_executable(Clock main.cpp
         ClockImage.h
         ClockImage.cpp
 
+        ColorChooseWidget.h
+        ColorChooseWidget.cpp
+
  )
 
 
