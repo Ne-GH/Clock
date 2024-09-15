@@ -29,7 +29,7 @@ public:
 
 signals:
     void change_color(ClockColor);
-
+    void change_pen_width(int);
 private:
     Ui::ColorChooseWidget *ui;
 };

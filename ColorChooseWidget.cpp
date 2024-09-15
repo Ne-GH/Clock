@@ -32,6 +32,10 @@ ColorChooseWidget::ColorChooseWidget(QWidget *parent) :
             QColorDialog::getColor()});
     });
 
+    QObject::connect(ui->pen_width,&QSlider::valueChanged,[=] {
+        emit change_pen_width(ui->pen_width->value());
+    });
+
 }
 
 void ColorChooseWidget::draw_lab_color(const ClockColor color) const {

@@ -30,12 +30,21 @@ Menu::Menu(QMainWindow *parent = nullptr) {
             dynamic_cast<MainWindow *>(parent)->clock_color_ = clock_color;
             color_choose_widget_->draw_lab_color(clock_color);
         });
+        QObject::connect(color_choose_widget_.get(),&ColorChooseWidget::change_pen_width,[=](int pen_width) {
+            auto main_window = dynamic_cast<MainWindow *>(parent);
+            auto pen = main_window->clock_image_->pen_;
+            pen.setWidth(pen_width);
+            main_window->clock_image_->pen_ = pen;
+            main_window->clock_image_->painter_->setPen(pen);
+
+        });
 
         const auto clocks = dynamic_cast<MainWindow *>(parent)->clock_color_;
         color_choose_widget_->draw_lab_color({clocks.second_color,clocks.minute_color,clocks.hour_color});
         color_choose_widget_->exec();
 
     });
+
 
 }
 

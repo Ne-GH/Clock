@@ -14,6 +14,7 @@ class ClockImage {
     std::unique_ptr<QPainter> painter_;
     std::unique_ptr<QPixmap> pixmap_;
 
+    friend class Menu;
     QPen pen_;
 
 
@@ -23,8 +24,6 @@ public:
     ClockImage(int ,int);
 
     void draw_round(int radius, int angle);
-
-    void set_width_height(int,int);
 
     void draw_pixmap();
 

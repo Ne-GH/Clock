@@ -24,9 +24,9 @@ void ClockImage::draw_round(int radius, int angle) {
 
     painter_->drawArc(begin_pos,begin_pos,
                     width, height,
-                    90 * 16 , -(angle) * 16);
-
+                    90 * 16, -(angle) * 16);
 }
+
 
 void ClockImage::draw_pixmap() {
 
