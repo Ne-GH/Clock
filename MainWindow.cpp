@@ -23,26 +23,47 @@ QDataStream& operator>>(QDataStream& in, ClockColor& color) {
     return in;
 }
 
+QDataStream& operator<<(QDataStream& out, const QPen& pen) {
+    out << pen.width();
+    return out;
+}
+
+QDataStream& operator>>(QDataStream& in, QPen& pen) {
+    int width;
+    in >> width;
+    pen.setWidth(width);
+    return in;
+}
+
 // 序列化
-void SaveColor(const ClockColor& color, const QString& filename) {
+void MainWindow::save(const QString& filename) {
     QFile file(filename);
     if (file.open(QIODevice::WriteOnly)) {
         QDataStream out(&file);
-        out << color;
+        out << clock_color_;
+        out << clock_image_->pen_;
         file.close();
     }
 }
 
 // 反序列化
-ClockColor LoadColor(const QString& filename) {
+void MainWindow::load(const QString& filename) {
     QFile file(filename);
     ClockColor color;
     if (file.open(QIODevice::ReadOnly)) {
         QDataStream in(&file);
         in >> color;
+        QPen pen;
+        in >> pen;
+        int width = pen.width();
+        if (width == 0) {
+            width = 40;
+        }
+        clock_image_->set_pen_width(width);
+        clock_color_ = color;
         file.close();
     }
-    return color;
+
 }
 
 
@@ -69,20 +90,22 @@ Menu::Menu(QMainWindow *parent = nullptr) {
             const auto window = dynamic_cast<MainWindow *>(parent);
             window->clock_color_ = clock_color;
             color_choose_widget_->draw_lab_color(clock_color);
-            window->save_config();
+            window->save("./config.cfg");
 
         });
         QObject::connect(color_choose_widget_.get(),&ColorChooseWidget::change_pen_width,[=](int pen_width) {
-            auto main_window = dynamic_cast<MainWindow *>(parent);
-            auto pen = main_window->clock_image_->pen_;
+            auto window = dynamic_cast<MainWindow *>(parent);
+            auto pen = window->clock_image_->pen_;
             pen.setWidth(pen_width);
-            main_window->clock_image_->pen_ = pen;
-            main_window->clock_image_->painter_->setPen(pen);
+            window->clock_image_->pen_ = pen;
+            window->clock_image_->painter_->setPen(pen);
+            window->save("./config.cfg");
 
         });
 
         const auto clocks = dynamic_cast<MainWindow *>(parent)->clock_color_;
         color_choose_widget_->draw_lab_color({clocks.second_color,clocks.minute_color,clocks.hour_color});
+        color_choose_widget_->set_pen_lan_value(dynamic_cast<MainWindow *>(parent)->clock_image_->pen_.width());
         color_choose_widget_->exec();
 
     });
@@ -97,7 +120,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->statusbar->hide();
 
-    load_config();
 
     clock_lab_ = new QLabel(this);
     setCentralWidget(clock_lab_);
@@ -124,6 +146,7 @@ MainWindow::MainWindow(QWidget *parent)
     menu_ = std::make_unique<Menu>(this);
 
     tray_icon_.setContextMenu(menu_->menu());
+    load("./config.cfg");
 
 }
 
@@ -139,13 +162,6 @@ void MainWindow::update_clock() {
     tray_icon_.setIcon(clock_image_->pixmap());
 }
 
-void MainWindow::save_config() {
-    SaveColor(clock_color_,"./config.cfg");
-
-}
-void MainWindow::load_config() {
-    clock_color_ = LoadColor("./config.cfg");
-}
 
 QMenu *Menu::menu(){
     return menu_.get();

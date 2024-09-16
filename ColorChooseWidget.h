@@ -26,6 +26,7 @@ public:
     explicit ColorChooseWidget(QWidget *parent = nullptr);
     ~ColorChooseWidget() override;
     void draw_lab_color(const ClockColor) const;
+    void set_pen_lan_value(int);
 
 signals:
     void change_color(ClockColor);

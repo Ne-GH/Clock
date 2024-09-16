@@ -56,5 +56,8 @@ void ColorChooseWidget::draw_lab_color(const ClockColor color) const {
     ui->hour_color_lab->setAutoFillBackground(true);
     ui->hour_color_lab->setPalette(palette);
 }
+void ColorChooseWidget::set_pen_lan_value(const int val) {
+    ui->pen_width->setValue(val);
+}
 
 ColorChooseWidget::~ColorChooseWidget() { delete ui; }

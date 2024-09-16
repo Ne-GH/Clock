@@ -15,6 +15,7 @@ class ClockImage {
     std::unique_ptr<QPixmap> pixmap_;
 
     friend class Menu;
+    friend class MainWindow;
     QPen pen_;
 
 
