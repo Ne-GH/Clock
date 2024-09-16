@@ -34,15 +34,19 @@ void ClockImage::draw_round(int radius, int angle) {
 }
 
 
-void ClockImage::draw_pixmap() {
+void ClockImage::draw_pixmap(bool is_24) {
 
     const Time time;
     pixmap_->fill(Qt::transparent);
 
-    auto hour = time.hour() * 15;  // hour / 24 * 360
-    auto minute = time.minute() * 6; // minute / 60 * 360
-    int second = time.second() * 6; // second / 60 * 360
-    auto millisecond = time.millisecond() * 0.006; // millisecond / 1000 * 6 (1毫秒占6度)
+    int second,minute,hour,millisecond;
+    if (is_24)
+        hour = time.hour() * 15;  // hour / 24 * 360
+    else
+        hour = (time.hour() - 12) * 30;  // hour / 12 * 360
+
+    minute = time.minute() * 6; // minute / 60 * 360
+    second = time.second() * 6; // second / 60 * 360
 
     pen_.setColor(color_.second_color);
     painter_->setPen(pen_);

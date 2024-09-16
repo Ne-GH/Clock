@@ -27,10 +27,12 @@ public:
     ~ColorChooseWidget() override;
     void draw_lab_color(const ClockColor) const;
     void set_pen_lan_value(int);
+    void draw_checkbox(bool);
 
 signals:
     void change_color(ClockColor);
     void change_pen_width(int);
+    void change_base_to_24(bool);
 private:
     Ui::ColorChooseWidget *ui;
 };

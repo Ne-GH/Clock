@@ -42,6 +42,7 @@ void MainWindow::save(const QString& filename) {
         QDataStream out(&file);
         out << clock_color_;
         out << clock_image_->pen_;
+        out << is_24;
         file.close();
     }
 }
@@ -52,7 +53,10 @@ void MainWindow::load(const QString& filename) {
     ClockColor color;
     if (file.open(QIODevice::ReadOnly)) {
         QDataStream in(&file);
+        // color
         in >> color;
+
+        // pen
         QPen pen;
         in >> pen;
         int width = pen.width();
@@ -61,6 +65,11 @@ void MainWindow::load(const QString& filename) {
         }
         clock_image_->set_pen_width(width);
         clock_color_ = color;
+
+        // 进制
+        in >> is_24;
+
+
         file.close();
     }
 
@@ -85,16 +94,15 @@ Menu::Menu(QMainWindow *parent = nullptr) {
     QObject::connect(color_choose_action_.get(), &QAction::triggered, [=] {
         if (parent == nullptr)
             return;
+        auto window = dynamic_cast<MainWindow *>(parent);
 
         QObject::connect(color_choose_widget_.get(),&ColorChooseWidget::change_color,[=](ClockColor clock_color) {
-            const auto window = dynamic_cast<MainWindow *>(parent);
             window->clock_color_ = clock_color;
             color_choose_widget_->draw_lab_color(clock_color);
             window->save("./config.cfg");
 
         });
         QObject::connect(color_choose_widget_.get(),&ColorChooseWidget::change_pen_width,[=](int pen_width) {
-            auto window = dynamic_cast<MainWindow *>(parent);
             auto pen = window->clock_image_->pen_;
             pen.setWidth(pen_width);
             window->clock_image_->pen_ = pen;
@@ -102,10 +110,16 @@ Menu::Menu(QMainWindow *parent = nullptr) {
             window->save("./config.cfg");
 
         });
+        QObject::connect(color_choose_widget_.get(),&ColorChooseWidget::change_base_to_24,[=](bool is_24) {
+            window->is_24 = is_24;
 
-        const auto clocks = dynamic_cast<MainWindow *>(parent)->clock_color_;
+            window->save("./config.cfg");
+
+        });
+        const auto clocks = window->clock_color_;
         color_choose_widget_->draw_lab_color({clocks.second_color,clocks.minute_color,clocks.hour_color});
-        color_choose_widget_->set_pen_lan_value(dynamic_cast<MainWindow *>(parent)->clock_image_->pen_.width());
+        color_choose_widget_->set_pen_lan_value(window->clock_image_->pen_.width());
+        color_choose_widget_->draw_checkbox(window->is_24);
         color_choose_widget_->exec();
 
     });
@@ -138,7 +152,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     clock_image_ = std::make_unique<ClockImage>(width(),height());
-    clock_image_->draw_pixmap();
+    clock_image_->draw_pixmap(is_24);
 
     tray_icon_.setIcon(clock_image_->pixmap());
     tray_icon_.setToolTip("Clock");
@@ -157,7 +171,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::update_clock() {
     clock_image_->set_color(clock_color_);
-    clock_image_->draw_pixmap();
+    clock_image_->draw_pixmap(is_24);
     clock_lab_->setPixmap(clock_image_->pixmap());
     tray_icon_.setIcon(clock_image_->pixmap());
 }

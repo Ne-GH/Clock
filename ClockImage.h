@@ -26,7 +26,7 @@ public:
 
     void draw_round(int radius, int angle);
 
-    void draw_pixmap();
+    void draw_pixmap(bool);
 
     void set_pen_width(int);
 

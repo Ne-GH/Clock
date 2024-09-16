@@ -36,6 +36,17 @@ ColorChooseWidget::ColorChooseWidget(QWidget *parent) :
         emit change_pen_width(ui->pen_width->value());
     });
 
+    QObject::connect(ui->check_12, &QCheckBox::clicked,[=] {
+        ui->check_12->setChecked(true);
+        ui->check_24->setChecked(false);
+        emit change_base_to_24(false);
+    });
+    QObject::connect(ui->check_24, &QCheckBox::clicked,[=] {
+        ui->check_24->setChecked(true);
+        ui->check_12->setChecked(false);
+        emit change_base_to_24(true);
+    });
+
 }
 
 void ColorChooseWidget::draw_lab_color(const ClockColor color) const {
@@ -58,6 +69,16 @@ void ColorChooseWidget::draw_lab_color(const ClockColor color) const {
 }
 void ColorChooseWidget::set_pen_lan_value(const int val) {
     ui->pen_width->setValue(val);
+}
+void ColorChooseWidget::draw_checkbox(bool is_24) {
+    if (is_24 == true) {
+        ui->check_24->setChecked(true);
+        ui->check_12->setChecked(false);
+    }
+    else {
+        ui->check_24->setChecked(false);
+        ui->check_12->setChecked(true);
+    }
 }
 
 ColorChooseWidget::~ColorChooseWidget() { delete ui; }

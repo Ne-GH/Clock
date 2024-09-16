@@ -39,6 +39,7 @@ class MainWindow : public QMainWindow
     QSystemTrayIcon tray_icon_;
     ClockColor clock_color_;
     std::unique_ptr<Menu> menu_;
+    bool is_24 = true;
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
