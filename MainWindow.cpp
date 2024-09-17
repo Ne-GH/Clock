@@ -103,10 +103,7 @@ Menu::Menu(QMainWindow *parent = nullptr) {
 
         });
         QObject::connect(color_choose_widget_.get(),&ColorChooseWidget::change_pen_width,[=](int pen_width) {
-            auto pen = window->clock_image_->pen_;
-            pen.setWidth(pen_width);
-            window->clock_image_->pen_ = pen;
-            window->clock_image_->painter_->setPen(pen);
+            window->clock_image_->set_pen_width(pen_width);
             window->save("./config.cfg");
 
         });

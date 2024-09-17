@@ -12,6 +12,7 @@
 
 class ClockImage {
     std::unique_ptr<QPainter> painter_;
+    std::unique_ptr<QPainter> scale_painter_;
     std::unique_ptr<QPixmap> pixmap_;
 
     friend class Menu;
@@ -22,7 +23,10 @@ class ClockImage {
     ClockColor color_;
 
 public:
-    ClockImage(int ,int);
+    ClockImage(int, int);
+    void painter_draw(bool is_24);
+
+    void scale_painter_draw(bool is_24);
 
     void draw_round(int radius, int angle);
 
