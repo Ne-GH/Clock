@@ -17,7 +17,7 @@ class ClockImage {
 
     friend class Menu;
     friend class MainWindow;
-    QPen pen_;
+    QPen pen_, scale_pen_;
 
 
     ClockColor color_;

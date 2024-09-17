@@ -9,8 +9,10 @@ ClockImage::ClockImage(int width,int height) {
     pixmap_ = std::make_unique<QPixmap>(width,height);
     painter_ = std::make_unique<QPainter>();
     scale_painter_ = std::make_unique<QPainter>();
-    QPen scale_pen = QPen(Qt::black);
-    scale_pen.setWidth(5);
+    scale_pen_ = QPen(Qt::black);
+
+    scale_pen_.setWidth(5);
+    scale_pen_.setCapStyle(Qt::FlatCap);
 
 
 }
@@ -49,9 +51,31 @@ void ClockImage::painter_draw(bool is_24) {
 }
 
 void ClockImage::scale_painter_draw(bool is_24){
+    int width = pixmap_->width();
+    int height = pixmap_->height();
+    int pen_width = pen_.width();
     scale_painter_->begin(pixmap_.get());
-    auto scale_line = QLine(0,0,0,pen_.width());
-    scale_painter_->drawLine(scale_line);
+    scale_painter_->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform); //抗锯齿和使用平滑转换算法
+    scale_painter_->save();
+    scale_painter_->translate(pixmap_->width()/2,pixmap_->height()/2);
+    auto scale_line = QLine(0,height/2 - pen_width / 4,0,height/2);
+    auto big_scale_line = QLine(0,height/2 - pen_width / 2,0,height/2);
+
+    scale_pen_.setWidth(3);
+    scale_painter_->setPen(scale_pen_);
+    for (int i = 0;i < 360; i += 6) {
+        scale_painter_->rotate(6);
+        scale_painter_->drawLine(scale_line);
+    }
+
+    scale_pen_.setWidth(6);
+    scale_painter_->setPen(scale_pen_);
+    for (int i = 0;i < 360; i += 30) {
+        scale_painter_->rotate(30);
+        scale_painter_->drawLine(big_scale_line);
+    }
+
+    scale_painter_->restore();
     scale_painter_->end();
 
 }
